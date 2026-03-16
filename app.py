@@ -4,7 +4,7 @@ import pandas as pd
 
 st.title("🐎 Tipster Performance Dashboard")
 
-con = duckdb.connect("races.duckdb")
+con = duckdb.connect("zeturf.duckdb")
 
 # ---------------------------
 # Build base dataset
