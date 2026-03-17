@@ -108,8 +108,8 @@ def simulate(df):
     for (date, hippo, race, tipster), group in grouped:
 
         group = group.sort_values("prono_rank")
-        picks = group.head(4)["horse"].tolist()
-
+        #picks = group.head(4)["horse"].tolist()
+        picks = ["horse"].tolist()
         if len(picks) < 4:
             continue
 
