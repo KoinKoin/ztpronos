@@ -76,12 +76,14 @@ filtered = filtered[
 # -------------------------
 st.sidebar.header("Strategy")
 
-strategy = st.sidebar.selectbox(
-    "Strategy",
-    ["S1: Top pick combos", "S2: No top pick"]
-)
+strategies = {
+    "Top pick combos": "s1",
+    "No top pick": "s2",
+    "Top pick vs outsiders": "s3"
+}
 
-strategy_code = "s1" if strategy.startswith("S1") else "s2"
+strategy_label = st.sidebar.selectbox("Strategy", list(strategies.keys()))
+strategy_code = strategies[strategy_label]
 
 target_profit = st.sidebar.number_input(
     "Stop when profit reaches (€)",
@@ -117,8 +119,11 @@ def simulate(df):
         # build pairs
         if strategy_code == "s1":
             pairs = [(picks[0], picks[i]) for i in range(1, 4)]
-        else:
+        elif strategy_code == "s2":
             pairs = list(itertools.combinations(picks[1:4], 2))
+        elif strategy_code == "s3":
+            outsiders = [h for h in all_horses if h not in picks]
+            pairs = [(picks[0], h) for h in outsiders]
 
         win = any(set(pair) == top2 for pair in pairs)
 
