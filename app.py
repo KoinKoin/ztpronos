@@ -116,6 +116,8 @@ def simulate(df):
         top2 = set(group[group["final_rank"] <= 2]["horse"])
         jg = group["jg"].iloc[0]
 
+        all_horses = df[df["idcourse"] == race]["horse"].unique().tolist()
+        
         # build pairs
         if strategy_code == "s1":
             pairs = [(picks[0], picks[i]) for i in range(1, 4)]
