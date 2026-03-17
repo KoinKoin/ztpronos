@@ -109,7 +109,7 @@ def simulate(df):
 
         group = group.sort_values("prono_rank")
         #picks = group.head(4)["horse"].tolist()
-        picks = ["horse"].tolist()
+        picks = group.sort_values("prono_rank")["horse"].tolist()
         if len(picks) < 4:
             continue
 
