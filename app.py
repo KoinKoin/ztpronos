@@ -192,7 +192,8 @@ for _, row in res.iterrows():
     else:
         stake = row["bets"]
 
-    bankroll += (row["profit"] / row["bets"]) * stake
+    if row["bets"] > 0:
+        bankroll += (row["profit"] / row["bets"]) * stake
 
     bankrolls.append(bankroll)
 
