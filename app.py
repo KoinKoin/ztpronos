@@ -1,4 +1,53 @@
 import streamlit as st
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+st.set_page_config(page_title="Betting ROI Simulator", layout="centered")
+
+st.title("📈 Elite Betting ROI Tracker")
+st.subheader("Totally Legit Performance Dashboard 😉")
+
+# User inputs
+days = st.slider("Number of days", 30, 365, 120)
+starting_bankroll = st.number_input("Starting bankroll (€)", 100, 10000, 1000)
+
+# Generate fake ROI data
+np.random.seed(42)
+daily_returns = np.random.normal(loc=0.01, scale=0.02, size=days)  # avg +1% daily
+bankroll = [starting_bankroll]
+
+for r in daily_returns:
+    bankroll.append(bankroll[-1] * (1 + r))
+
+bankroll = bankroll[1:]
+
+# Create dataframe
+df = pd.DataFrame({
+    "Day": np.arange(1, days + 1),
+    "Bankroll": bankroll
+})
+
+roi = (bankroll[-1] / starting_bankroll - 1) * 100
+
+# Display metrics
+st.metric("Final Bankroll", f"€{bankroll[-1]:,.2f}")
+st.metric("ROI", f"{roi:.2f}%")
+st.metric("Win Rate", f"{np.random.randint(65, 85)}%")
+
+# Plot
+fig, ax = plt.subplots()
+ax.plot(df["Day"], df["Bankroll"], linewidth=2)
+ax.set_title("Bankroll Growth Over Time")
+ax.set_xlabel("Days")
+ax.set_ylabel("Bankroll (€)")
+ax.grid(True)
+
+st.pyplot(fig)
+
+st.success("🔥 Consistent profits. No variance. Just skill.")
+
+import streamlit as st
 import duckdb
 import pandas as pd
 import itertools
