@@ -5,16 +5,23 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Betting ROI Simulator", layout="centered")
 
-st.title("📈 Elite Betting ROI Tracker")
-st.subheader("Totally Legit Performance Dashboard 😉")
+st.title("📊 Betting Performance Tracker")
+st.caption("Simulated long-term results")
 
-# User inputs
-days = st.slider("Number of days", 30, 365, 120)
+# Inputs
+years = st.slider("Number of years", 1, 10, 3)
 starting_bankroll = st.number_input("Starting bankroll (€)", 100, 10000, 1000)
 
-# Generate fake ROI data
-np.random.seed(42)
-daily_returns = np.random.normal(loc=0.01, scale=0.02, size=days)  # avg +1% daily
+days = years * 365
+
+# More realistic assumptions
+np.random.seed(7)
+daily_returns = np.random.normal(
+    loc=0.002,   # ~0.2% edge per day
+    scale=0.015, # realistic variance
+    size=days
+)
+
 bankroll = [starting_bankroll]
 
 for r in daily_returns:
@@ -22,30 +29,42 @@ for r in daily_returns:
 
 bankroll = bankroll[1:]
 
-# Create dataframe
+# Dataframe with dates
+dates = pd.date_range(start="2020-01-01", periods=days)
 df = pd.DataFrame({
-    "Day": np.arange(1, days + 1),
+    "Date": dates,
     "Bankroll": bankroll
 })
 
+# Metrics
 roi = (bankroll[-1] / starting_bankroll - 1) * 100
 
-# Display metrics
-st.metric("Final Bankroll", f"€{bankroll[-1]:,.2f}")
-st.metric("ROI", f"{roi:.2f}%")
-st.metric("Win Rate", f"{np.random.randint(65, 85)}%")
+# Max drawdown
+roll_max = df["Bankroll"].cummax()
+drawdown = df["Bankroll"] / roll_max - 1
+max_dd = drawdown.min() * 100
+
+# Display
+col1, col2, col3 = st.columns(3)
+col1.metric("Final Bankroll", f"€{bankroll[-1]:,.0f}")
+col2.metric("ROI", f"{roi:.1f}%")
+col3.metric("Max Drawdown", f"{max_dd:.1f}%")
 
 # Plot
-fig, ax = plt.subplots()
-ax.plot(df["Day"], df["Bankroll"], linewidth=2)
-ax.set_title("Bankroll Growth Over Time")
-ax.set_xlabel("Days")
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(df["Date"], df["Bankroll"], linewidth=2)
+
+# Add drawdown shading
+ax.fill_between(df["Date"], df["Bankroll"], roll_max, alpha=0.1)
+
+ax.set_title(f"Bankroll Growth Over {years} Years")
+ax.set_xlabel("Date")
 ax.set_ylabel("Bankroll (€)")
 ax.grid(True)
 
 st.pyplot(fig)
 
-st.success("🔥 Consistent profits. No variance. Just skill.")
+st.info("📉 Includes variance and drawdowns — like real betting.")
 
 import streamlit as st
 import duckdb
