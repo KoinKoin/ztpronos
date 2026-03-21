@@ -27,7 +27,7 @@ def load_data():
         a.rank AS final_rank,
         c.hippo,
         c.discipline,
-        c.datecourse,
+        CAST(c.datecourse AS DATE) AS datecourse,
         r.jg
     FROM pronos p
     LEFT JOIN arrivee a
@@ -68,7 +68,6 @@ if hippos:
 if disciplines:
     filtered = filtered[filtered.discipline.isin(disciplines)]
 
-st.write(type(filtered.datecourse))
 filtered = filtered[
     (filtered.datecourse >= pd.to_datetime(date_range[0])) &
     (filtered.datecourse <= pd.to_datetime(date_range[1]))
