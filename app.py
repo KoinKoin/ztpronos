@@ -41,7 +41,7 @@ def load_data():
     return con.execute(query).df()
 
 df = load_data()
-st.dataframe(df.head())
+
 # -------------------------
 # SIDEBAR FILTERS
 # -------------------------
@@ -68,6 +68,7 @@ if hippos:
 if disciplines:
     filtered = filtered[filtered.discipline.isin(disciplines)]
 
+st.write(type(filtered.datecourse))
 filtered = filtered[
     (filtered.datecourse >= pd.to_datetime(date_range[0])) &
     (filtered.datecourse <= pd.to_datetime(date_range[1]))
