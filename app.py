@@ -7,9 +7,11 @@ st.set_page_config(layout="wide")
 st.title("🐎 Betting Strategy Simulator")
 
 # -------------------------
-# DB CONNECTION
+# CONNECTION
 # -------------------------
-con = duckdb.connect("zeturf.duckdb")
+from analytics import get_connection
+
+con = get_connection()
 
 # -------------------------
 # LOAD DATA
