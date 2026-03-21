@@ -41,7 +41,7 @@ def load_data():
     return con.execute(query).df()
 
 df = load_data()
-
+st.dataframe(df.head())
 # -------------------------
 # SIDEBAR FILTERS
 # -------------------------
